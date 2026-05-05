@@ -1,5 +1,5 @@
 """
-Credit Risk AI — Streamlit Application
+CreditSenseAI — Streamlit Application
 ========================================
 
 Unified interface for credit risk analysis with 4 tabs:
@@ -25,7 +25,7 @@ from agent.service import AnalysisService
 
 
 st.set_page_config(
-    page_title="Credit Risk AI",
+    page_title="CreditSenseAI",
     page_icon="🏦",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -96,7 +96,7 @@ st.markdown("""
 # ── Sidebar ──────────────────────────────────────────────────────────────────
 
 with st.sidebar:
-    st.title("🏦 Credit Risk AI")
+    st.title("🏦 CreditSenseAI")
     st.caption("Multi-Agent Lending Decision Support System")
     st.markdown("---")
     st.markdown("**Components**")
@@ -123,11 +123,7 @@ with st.sidebar:
 
 service = AnalysisService()
 
-
-# ═══════════════════════════════════════════════════════════════════════════
 #  SHARED INPUT FORM
-# ═══════════════════════════════════════════════════════════════════════════
-
 
 def collect_borrower_input(prefix: str = "") -> dict:
     """Render the borrower input form and return feature dict."""
@@ -246,7 +242,7 @@ def render_similar_borrowers(input_data: dict) -> None:
         df["Rate %"] = df["Rate %"].apply(lambda x: f"{x:.1f}%")
         df["Similarity"] = df["Similarity"].apply(lambda x: f"{(1 - x):.0%}")
 
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df, width="stretch", hide_index=True)
 
     except Exception as e:
         st.markdown(f"⚠️ Could not find similar borrowers: {e}")
@@ -379,14 +375,15 @@ def _render_bias_group(title: str, metrics_df: pd.DataFrame, dir_result: dict) -
     display_df["Avg Default Probability"] = display_df["Avg Default Probability"].apply(lambda x: f"{x:.1%}")
     display_df["Actual Default Rate"] = display_df["Actual Default Rate"].apply(lambda x: f"{x:.1%}")
 
-    st.dataframe(display_df, use_container_width=True, hide_index=True)
+    st.dataframe(display_df, width="stretch", hide_index=True)
 
     csv_data = display_df.to_csv(index=False).encode('utf-8')
     st.download_button(
         label="📥 Download Bias Report as CSV",
         data=csv_data,
-        file_name="bias_report.csv",
+        file_name=f"bias_report_{title.lower().replace(' ', '_')}.csv",
         mime="text/csv",
+        key=f"dl_btn_{title}"
     )
     # Bar chart of approval rates
     chart_df = metrics_df[["Group", "Approval Rate"]].copy()
@@ -474,7 +471,7 @@ def render_market_rates_tab() -> None:
     if not rates_df.empty:
         rates_df.columns = ["Security", "Rate (%)", "Type"]
         rates_df["Rate (%)"] = rates_df["Rate (%)"].apply(lambda x: f"{x:.3f}%")
-        st.dataframe(rates_df, use_container_width=True, hide_index=True)
+        st.dataframe(rates_df, width="stretch", hide_index=True)
 
     # Borrower comparison
     st.markdown("---")
@@ -502,7 +499,7 @@ def render_market_rates_tab() -> None:
             with st.expander("Detailed Comparison by Security"):
                 comp_df = pd.DataFrame(comparison["comparisons"])
                 comp_df.columns = ["Security", "Treasury Rate (%)", "Spread (%)", "Direction"]
-                st.dataframe(comp_df, use_container_width=True, hide_index=True)
+                st.dataframe(comp_df, width="stretch", hide_index=True)
         else:
             st.markdown("⚠️ Treasury rates not available for comparison.")
 
@@ -539,7 +536,7 @@ def render_model_evaluation_tab() -> None:
                         "Log Loss": f"{m['log_loss_val']:.4f}",
                         "MCC": f"{m['mcc']:.4f}",
                     })
-                st.dataframe(pd.DataFrame(summary_data), use_container_width=True, hide_index=True)
+                st.dataframe(pd.DataFrame(summary_data), width="stretch", hide_index=True)
 
                 csv_data = pd.DataFrame(summary_data).to_csv(index=False).encode('utf-8')
                 st.download_button(
@@ -577,13 +574,13 @@ def render_model_evaluation_tab() -> None:
                         columns=["Predicted: No Default", "Predicted: Default"],
                     )
                     st.write("**Confusion Matrix**")
-                    st.dataframe(cm_df, use_container_width=True)
+                    st.dataframe(cm_df, width="stretch")
 
                     # Classification Report
                     with st.expander("Classification Report"):
                         report = m["classification_report"]
                         report_df = pd.DataFrame(report).T
-                        st.dataframe(report_df.round(4), use_container_width=True)
+                        st.dataframe(report_df.round(4), width="stretch")
 
                     # Feature Importance
                     st.write("**Feature Importance**")

@@ -1,5 +1,5 @@
 """
-LangGraph Agent Workflow — Credit Risk Decision Pipeline (Advanced)
+LangGraph Agent Workflow — CreditSenseAI Decision Pipeline (Advanced)
 =====================================================================
 
 Orchestrates the full lending decision pipeline as a stateful LangGraph
@@ -776,7 +776,7 @@ def run_agent(input_data: dict, debug: bool = False, max_passes: int = 2) -> dic
         - steps_completed: Full audit trail of executed nodes
     """
     logger.info("=" * 60)
-    logger.info("🚀 Starting Credit Risk Agent Workflow (Advanced)")
+    logger.info("🚀 Starting CreditSenseAI Agent Workflow (Advanced)")
     logger.info("=" * 60)
 
     start_time = time.time()

@@ -1,6 +1,6 @@
 {
   "Logistic Regression": {
-    "Accuracy": 0.8524,
+    "Accuracy": 0.8522,
     "ROC_AUC": 0.8602,
     "Confusion_Matrix": [
       [
@@ -8,8 +8,8 @@
         340
       ],
       [
-        1063,
-        985
+        1065,
+        983
       ]
     ]
   },
